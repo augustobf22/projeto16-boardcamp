@@ -1,12 +1,11 @@
-import { MongoClient } from "mongodb";
+import pg from "pg";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-const mongoClient = new MongoClient(process.env.DATABASE_URL);
-export let db;
+const { Pool } = pg;
 
-mongoClient
-  .connect()
-  .then(() => (db = mongoClient.db()))
-  .catch((err) => console.log(err.message));
+const configDatabase = {
+  connectionString: process.env.DATABASE_URL,
+};
+
+export const db = new Pool(configDatabase);
