@@ -29,7 +29,7 @@ export async function getCustomersById(req, res) {
         const c = await db.query(`SELECT id, name, phone, cpf, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers WHERE id = $1`,[id]);
         if(c.rowCount === 0) return res.sendStatus(404);
 
-        res.status(200).send(c.rows);
+        res.status(200).send(c.rows[0]);
     } catch (err) {
         res.status(500).send(err.message);
     }
