@@ -3,7 +3,7 @@ import { db } from "../database/database.connection.js"
 export async function getCustomers(req, res) {
     try {
         const customers = await db.query(`SELECT id, name, phone, cpf, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday FROM customers;`);
-        res.status(200).send(customers.rows);
+        res.status(200).send(customers.rows[0]);
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -42,7 +42,7 @@ export async function updateCustomer(req, res) {
     
     try {
         const c = await db.query(`SELECT id, cpf FROM customers WHERE cpf=$1`,[cpf]);
-        if(c.rowCount > 0 && c.rows[0].id != id) return res.sendStatus(404);
+        if(c.rowCount > 0 && c.rows[0].id != id) return res.sendStatus(409);
 
         await db.query(`UPDATE customers SET name=$2, phone=$3, cpf=$4, birthday=$5  WHERE id = $1;`,[id, name, phone, cpf, birthday ]);
         res.sendStatus(200);
